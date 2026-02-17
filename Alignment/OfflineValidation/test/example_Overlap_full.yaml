@@ -1,0 +1,127 @@
+LFS: /afs/cern.ch/cms/CAF/CMSALCA/ALCA_TRACKERALIGN/data/commonValidation/jdavis/Overlap_Validation
+name: Overlap_test_full
+alignments:
+    UL:
+        color: 432
+        globaltag: 110X_dataRun2_v10
+        style: 2001
+        title: UL
+    MC:
+        color: 2
+        globaltag: 125X_mcRun3_2022_realistic_v3
+        style: 2101
+        title: MC
+    StartGeom:
+        color: 1
+        globaltag: 106X_dataRun3_Express_v2
+        style: 2001
+        title: StartGeom
+        conditions:
+            BeamSpotObjectsRcd:
+                connect: frontier://FrontierProd/CMS_CONDITIONS
+                tag: BeamSpotObjects_PCL_byLumi_v0_prompt
+            TrackerAlignmentRcd:
+                connect: frontier://FrontierProd/CMS_CONDITIONS
+                tag: TrackerAlignment_lastIOV_v2ReReco2017
+
+validations:
+    Overlap:
+        single:
+            Run2018B:
+                IOV: 
+                  - 317087
+                  - 317089
+                  - 317182
+                  - 317212
+                  - 317213
+                  - 317279
+                  - 317291
+                  - 317292
+                  - 317297
+                  - 317319
+                  - 317320
+                alignments:
+                    - UL
+                    - StartGeom 
+                dataset: /afs/cern.ch/cms/CAF/CMSALCA/ALCA_TRACKERALIGN3/data/HG_PCL_studies/validations/badStartingGeomPCL/MinBias2018/unskimmed_list.txt
+                goodlumi: /afs/cern.ch/cms/CAF/CMSALCA/ALCA_TRACKERALIGN3/data/HG_PCL_studies/validations/badStartingGeomPCL/MinBias2018/IOV_Vali_{}.json  
+                maxevents: 10000
+                trackcollection: ALCARECOTkAlMinBias
+
+            TestSingleMC:
+                IOV:
+                    - 1
+                alignments:
+                    - MC
+                dataset: /afs/cern.ch/cms/CAF/CMSALCA/ALCA_TRACKERALIGN3/data/test/GEN-SIM-RECO_2022/unskimmed_list.txt 
+                trackcollection: generalTracks
+                maxevents: 10000
+                isda: true
+                ismc: true
+        merge:
+          Run2:
+            singles:
+              - Run2018B
+            customrighttitle: IOV
+          MConly:
+            singles:
+              - TestSingleMC
+            customrighttitle: MC
+          Comparison:
+            singles:
+              - Run2018B
+              - TestSingleMC
+            customrighttitle: IOV
+
+        trends:
+            Run2trend:
+                merges:
+                    - Run2
+                firstRun: 317087
+                lastRun: 317212
+    
+style:
+  Overlap:
+    merge:
+      CMSlabel: "Preliminary"
+  trends:
+    CMSlabel: "Internal"
+    Rlabel: "2018B"
+    lumiInputFile: "$CMSSW_BASE/src/Alignment/OfflineValidation/data/lumiperFullRun2_delivered.csv"
+    lines:
+        pixel:
+            line:
+                title: Pixel calibration update
+                style: kDotted
+                color: kGray
+            runs:
+                - 317475
+                - 317485
+                - 317527
+                - 317661
+                - 317664
+                - 318227
+        years:
+            line:
+                style: kSolid
+                color: kBlack
+                width: 1
+            runs:
+                - 272008
+                - 290543
+                - 313041
+            labels:
+                - 2016
+                - 2017
+                - 2018
+        phases:
+            line:
+                style: kSolid
+                color: kBlack
+                width: 2
+            runs:
+                - 272008
+                - 290543
+            labels:
+                - Phase-0
+                - Phase-1
